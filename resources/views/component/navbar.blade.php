@@ -32,7 +32,7 @@
                                 <a href="#" class="dropdown-item">My Dashboard</a>
                             </li>
                             <li>
-                                <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementBtId('logout-form').submit()">Sign out</a>
+                                <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Sign out</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 </form>
