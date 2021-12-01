@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Camps;
 use App\Models\Checkouts;
 use Illuminate\Http\Request;
+use App\Http\Requests\User\Checkout\Store;
 use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
@@ -15,8 +16,14 @@ class CheckoutController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Camps $camp)
+    public function index(Camps $camp, Request $request)
     {
+
+        if ($camp->isRegistered) {
+            $request->session()->flash('error', "You already registered on {$camp->title} camp.");
+            return redirect(route('dashboard'));
+        }
+
         $data['camp'] = $camp;
         return view('checkout.index', $data);
     }
@@ -37,8 +44,10 @@ class CheckoutController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Camps $camp)
+    public function store(Store $request, Camps $camp)
     {
+
+        // return $request->all();
         //mapping request data
         $data = $request->all();
         $data['user_id'] = Auth::id();

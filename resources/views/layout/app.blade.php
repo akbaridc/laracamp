@@ -19,7 +19,7 @@
 
 <body>
 
-    @include('component.navbar')
+    @include('components.navbar')
 
    @yield('content')
 
