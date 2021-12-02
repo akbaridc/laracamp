@@ -8,6 +8,8 @@ use App\Models\Checkouts;
 use Illuminate\Http\Request;
 use App\Http\Requests\User\Checkout\Store;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Checkout\AfterCheckout;
 
 class CheckoutController extends Controller
 {
@@ -21,7 +23,7 @@ class CheckoutController extends Controller
 
         if ($camp->isRegistered) {
             $request->session()->flash('error', "You already registered on {$camp->title} camp.");
-            return redirect(route('dashboard'));
+            return redirect(route('user.dashboard'));
         }
 
         $data['camp'] = $camp;
@@ -46,7 +48,6 @@ class CheckoutController extends Controller
      */
     public function store(Store $request, Camps $camp)
     {
-
         // return $request->all();
         //mapping request data
         $data = $request->all();
@@ -61,7 +62,8 @@ class CheckoutController extends Controller
         $user->save();
 
         //create tabel checkout
-        Checkouts::create($data);
+        $checkout = Checkouts::create($data);
+        Mail::to(Auth::user()->email)->send(new AfterCheckout($checkout));
 
         return redirect(route('checkout.success'));
     }
@@ -72,7 +74,7 @@ class CheckoutController extends Controller
      * @param  \App\Models\Checkouts  $checkouts
      * @return \Illuminate\Http\Response
      */
-    public function show(Checkouts $checkouts)
+    public function show(Checkouts $checkout)
     {
         //
     }
@@ -83,7 +85,7 @@ class CheckoutController extends Controller
      * @param  \App\Models\Checkouts  $checkouts
      * @return \Illuminate\Http\Response
      */
-    public function edit(Checkouts $checkouts)
+    public function edit(Checkouts $checkout)
     {
         //
     }
@@ -95,7 +97,7 @@ class CheckoutController extends Controller
      * @param  \App\Models\Checkouts  $checkouts
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Checkouts $checkouts)
+    public function update(Request $request, Checkouts $checkout)
     {
         //
     }
@@ -106,7 +108,7 @@ class CheckoutController extends Controller
      * @param  \App\Models\Checkouts  $checkouts
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Checkouts $checkouts)
+    public function destroy(Checkouts $checkout)
     {
         //
     }

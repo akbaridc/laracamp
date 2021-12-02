@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\User\DashboardController as UserDashboard;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,12 +36,25 @@ Route::get('/auth/google/callback', [UserController::class, 'handleProviderCallb
 
 Route::middleware(['auth'])->group(function () {
     //checkout route
-    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-    Route::get('/checkout/{camp:slug}', [CheckoutController::class, 'index'])->name('checkout');
-    Route::post('/checkout/{camp}', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success')->middleware('ensureUserRole:user');
+    Route::get('/checkout/{camp:slug}', [CheckoutController::class, 'index'])->name('checkout')->middleware('ensureUserRole:user');
+    Route::post('/checkout/{camp}', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('ensureUserRole:user');
+
+    //dashboard
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     //user dashboard
-    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+    Route::prefix('user/dashboard')->namespace('User')->name('user.')->middleware('ensureUserRole:user')->group(function () {
+        Route::get('/', [UserDashboard::class, 'index'])->name('dashboard');
+    });
+
+    //admin dashboard
+    Route::prefix('admin/dashboard')->namespace('Admin')->name('admin.')->middleware('ensureUserRole:admin')->group(function () {
+        Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
+
+        //set to paid
+        Route::post('/checkout/{checkouts}', [AdminDashboard::class, 'update'])->name('update.to.paid');
+    });
 });
 
 // Route::get('/dashboard', function () {
