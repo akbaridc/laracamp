@@ -19,7 +19,6 @@
                                     <th>Price</th>
                                     <th>Register Data</th>
                                     <th>Paid Status</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -31,21 +30,7 @@
                                         <td>${{ $data->Camp->price }}k</td>
                                         <td>{{ $data->created_at->format('M d Y') }}</td>
                                         <td>
-                                            @if ($data->is_paid)
-                                                <div class="badge bg-success">Paid</div>
-                                            @else
-                                                <div class="badge bg-warning">Waiting</div>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if (!$data->is_paid)
-                                                <form action="{{ route('admin.update.to.paid', $data->id) }}" method="POST">
-                                                    @csrf
-                                                    <button class="btn btn-primary btn-sm">Set to paid</button>
-                                                </form>
-                                            @else
-                                                <button class="btn btn-success btn-sm" disabled>Camp is paid</button>
-                                            @endif
+                                            <strong>{{ $data->payment_status }}</strong>
                                         </td>
                                     </tr>
                                 @empty

@@ -17,14 +17,14 @@ class DashboardController extends Controller
         return view('admin.dashboard', $data);
     }
 
-    public function update(Request $request, Checkouts $checkouts)
-    {
-        $checkouts->is_paid = true;
-        $checkouts->save();
+    // public function update(Request $request, Checkouts $checkouts)
+    // {
+    //     $checkouts->is_paid = true;
+    //     $checkouts->save();
 
-        Mail::to($checkouts->User->email)->send(new Paid($checkouts));
+    //     Mail::to($checkouts->User->email)->send(new Paid($checkouts));
 
-        $request->session()->flash('success', "Checkout with ID {$checkouts->id} has been updated");
-        return redirect(route('admin.dashboard'));
-    }
+    //     $request->session()->flash('success', "Checkout with ID {$checkouts->id} has been updated");
+    //     return redirect(route('admin.dashboard'));
+    // }
 }

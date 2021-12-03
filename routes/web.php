@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
 
         //set to paid
-        Route::post('/checkout/{checkouts}', [AdminDashboard::class, 'update'])->name('update.to.paid');
+        // Route::post('/checkout/{checkouts}', [AdminDashboard::class, 'update'])->name('update.to.paid');
     });
 });
 
